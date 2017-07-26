@@ -29,7 +29,8 @@ export default class Play extends Component{
   constructor(props) {
     super(props);
     this.state = {
-      deck: deck,
+      baseDeck: JSON.parse(JSON.stringify(deck)),
+      activeDeck: deck,
       timeLeft: 10,
       //currentCardIndex: 0,
       //activePlayerScore: 0,
@@ -52,18 +53,19 @@ export default class Play extends Component{
           ]
         }
       ],
-    activeTeam: 0,
-    stopCountdown: false // just for tests
+      activeTeam: 0,
+      stopCountdown: false, // just for tests
+      round: 1
     }
   }
 
   componentDidMount() {
-    let {deck} = this.state;
-    this._shuffle(deck);
-    console.log('shuffled deck: ',deck);
-    let newCurrentCard = deck.shift();
+    let {activeDeck} = this.state;
+    this._shuffle(activeDeck);
+    console.log('shuffled deck: ',activeDeck);
+    let newCurrentCard = activeDeck.shift();
     this.setState({currentCard: newCurrentCard});
-    this.setState({deck: deck});
+    this.setState({activeDeck: activeDeck});
     //this._countdown(); // Commented for tests
   }
 
@@ -97,23 +99,42 @@ export default class Play extends Component{
 
   _skipCard = () => {
     console.log('Clicked Skip!',this.state.currentCardIndex);
-    console.log('Deck Size ',this.state.deck.length);
-    let {deck} = this.state;
-    deck.push(this.state.currentCard);
-    let newCurrentCard = deck.shift();
+    console.log('Deck Size ',this.state.activeDeck.length);
+    let {activeDeck} = this.state;
+    activeDeck.push(this.state.currentCard);
+    let newCurrentCard = activeDeck.shift();
     this.setState({currentCard: newCurrentCard});
-    this.setState({deck: deck});
+    this.setState({activeDeck: activeDeck});
 
   }
 
   _guessCard = () => {
     //console.log('Clicked Guess!',this.state.currentCardIndex);
-    console.log('Deck Size ',this.state.deck.length);
+    console.log('Deck Size ',this.state.activeDeck.length);
+    let activeDeck;
 
-    let {deck} = this.state;
-    let newCurrentCard = deck.shift();
+    if(this.state.activeDeck.length == 0){
+      // End of Round
+      let currentRound = this.state.round;
+      // If it is the end of the last round
+      if(currentRound+1>3)
+        // End Game
+        return;
+      this.setState({round: currentRound+1})
+      activeDeck = JSON.parse(JSON.stringify(this.state.baseDeck));
+      this._shuffle(activeDeck);
+      console.log('shuffled deck: ',activeDeck);
+
+    } else {
+      activeDeck = this.state.activeDeck;
+      console.log('activeDeck: ',activeDeck);
+    }
+    console.log('activeDeck2: ',activeDeck);
+    let newCurrentCard = activeDeck.shift();
     this.setState({currentCard: newCurrentCard});
-    this.setState({deck: deck});
+    this.setState({activeDeck: activeDeck});
+    console.log('activeDeck: ',this.state.activeDeck);
+    console.log('baseDeck: ',this.state.baseDeck);
 
     let {teams} = this.state;
     let currentTeamScore = this.state.teams[this.state.activeTeam].points;
@@ -131,9 +152,10 @@ export default class Play extends Component{
           <Timer timeLeft={this.state.timeLeft}/>
           <Text>{this.state.teams[this.state.activeTeam].name}</Text>
           <Text>{this.state.teams[this.state.activeTeam].points}</Text>
+          <Text>Round: {this.state.round}</Text>
         </View>
         <Text style={styles.cardText}>{this.state.currentCard.value}</Text>
-        <Text>{this.state.deck.length}</Text>
+        <Text>{this.state.activeDeck.length}</Text>
         <View style={styles.btnContainer}>
           <Button onPress={() => this._guessCard()}><Text>Guess</Text></Button>
           <Button onPress={() => this._skipCard()}><Text>Skip</Text></Button>
