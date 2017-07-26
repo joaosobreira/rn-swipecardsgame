@@ -1,8 +1,11 @@
 import { StackNavigator } from 'react-navigation';
 import React, {Component} from 'react';
+
 import Play from './screens/Play.js';
+import Home from './screens/Home.js';
 
 const AppRouteConfigs = {
+  Home: {screen: Home},
   Play: {screen: Play}
 }
 
