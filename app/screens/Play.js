@@ -11,7 +11,13 @@ import Timer from '../components/Timer'
 const deck = [
   {value: 'Michael Cera'},
   {value: 'Emma Stone'},
-  {value: 'Jennifer Lawrence'}
+  {value: 'Jennifer Lawrence'},
+  {value: 'Anna Kendrick'},
+  {value: 'Amanda Seyfried'},
+  {value: 'James McAvoy'},
+  {value: 'Benedict Cumberbatch'},
+  {value: 'Christian Bale'},
+  {value: 'Brad Pitt'}
 ];
 
 export default class Play extends Component{
@@ -26,8 +32,28 @@ export default class Play extends Component{
       deck: deck,
       timeLeft: 10,
       //currentCardIndex: 0,
-      activePlayerScore: 0,
-      currentCard: {}
+      //activePlayerScore: 0,
+      currentCard: {},
+      activePlayer: 0,
+      teams: [
+        {
+          name: 'Team A',
+          points: 0,
+          players: [
+            {name: 'Player 1A'},
+            {name: 'Player 2A'}
+          ]
+        },{
+          name: 'Team B',
+          points: 0,
+          players: [
+            {name: 'Player 1B'},
+            {name: 'Player 2B'}
+          ]
+        }
+      ],
+    activeTeam: 0,
+    stopCountdown: false // just for tests
     }
   }
 
@@ -38,7 +64,7 @@ export default class Play extends Component{
     let newCurrentCard = deck.shift();
     this.setState({currentCard: newCurrentCard});
     this.setState({deck: deck});
-    this._countdown();
+    //this._countdown(); // Commented for tests
   }
 
   _shuffle(initialDeck) {
@@ -50,17 +76,22 @@ export default class Play extends Component{
 
   _countdown(){
     let timer = () => {
+      if(this.state.stopCountdown)
+        return;
       var time = this.state.timeLeft - 1;
       this.setState({timeLeft: time});
       if (time > 0) {
         setTimeout(timer, 1000);
       } else {
         this.setState({timeLeft: 10});
+        this.setState({activeTeam: this.state.activeTeam==0 ? 1 : 0})
         setTimeout(timer, 1000);
         //Teste - aqui seria o callback para o final da ronda
         this._skipCard();
       }
     };
+    if(this.state.stopCountdown)
+      this.setState({stopCountdown: false})
     setTimeout(timer, 1000);
   }
 
@@ -84,9 +115,11 @@ export default class Play extends Component{
     this.setState({currentCard: newCurrentCard});
     this.setState({deck: deck});
 
-    let {activePlayerScore} = this.state;
-    this.setState({activePlayerScore: activePlayerScore+1});
-    console.log('Active Player Score: ',this.state.activePlayerScore);
+    let {teams} = this.state;
+    let currentTeamScore = this.state.teams[this.state.activeTeam].points;
+    teams[this.state.activeTeam].points = currentTeamScore+1
+    this.setState({teams: teams});
+    //console.log('Active Player Score: ',this.state.activePlayerScore);
   }
 
 
@@ -96,12 +129,18 @@ export default class Play extends Component{
       <View style={styles.container}>
         <View style={styles.headerContainer}>
           <Timer timeLeft={this.state.timeLeft}/>
+          <Text>{this.state.teams[this.state.activeTeam].name}</Text>
+          <Text>{this.state.teams[this.state.activeTeam].points}</Text>
         </View>
         <Text style={styles.cardText}>{this.state.currentCard.value}</Text>
         <Text>{this.state.deck.length}</Text>
         <View style={styles.btnContainer}>
           <Button onPress={() => this._guessCard()}><Text>Guess</Text></Button>
           <Button onPress={() => this._skipCard()}><Text>Skip</Text></Button>
+        </View>
+        <View style={styles.btnContainer}>
+          <Button onPress={() => this._countdown()}><Text>Start Countdown</Text></Button>
+          <Button onPress={() => this.setState({stopCountdown: true})}><Text>Stop Countdown</Text></Button>
         </View>
       </View>
 
@@ -132,7 +171,7 @@ const styles = StyleSheet.create({
     borderColor: 'black'
   },
   btnContainer: {
-    flex: 2,
+    flex: 1,
     borderWidth: 2,
     borderColor: 'red',
     flexDirection: 'row',
