@@ -15,11 +15,11 @@ Personal project of Swipe Cards game mobile implementation in React Native.
 ### v0.2 | Basic Multiplayer (Multi-Team)
 - [X] Scoring by Team
 - [X] Pass to next player after time is up
-- [ ] Home Screen
+- [X] Home Screen
 
 ### v0.3 | Basic with Multiple Rounds
-- [ ] Recover and Shuffle active before each round
-- [ ] Scoring by round
+- [x] Recover and Shuffle active before each round
+- [X] Scoring by round
 
 ### v0.4 | Redux and Tinder-like
 - [ ] Redux structure
