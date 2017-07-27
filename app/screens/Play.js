@@ -6,7 +6,11 @@ import {
   TouchableHighlight
 } from 'react-native';
 import {Button} from 'native-base';
-import Timer from '../components/Timer'
+import {connect} from 'react-redux';
+
+import Timer from '../components/Timer';
+import RoundInfo from '../components/RoundInfo';
+import {goToNextRound} from '../actions/sessionActions';
 
 const deck = [
   {value: 'Michael Cera'},
@@ -20,7 +24,7 @@ const deck = [
   {value: 'Brad Pitt'}
 ];
 
-export default class Play extends Component{
+class Play extends Component{
 
   static navigationOptions = {
     header: null
@@ -121,6 +125,7 @@ export default class Play extends Component{
         // End Game
         return;
       this.setState({round: currentRound+1})
+      //onNextRound();
       activeDeck = JSON.parse(JSON.stringify(this.state.baseDeck));
       this._shuffle(activeDeck);
       console.log('shuffled deck: ',activeDeck);
@@ -148,11 +153,16 @@ export default class Play extends Component{
 
     return(
       <View style={styles.container}>
+
         <View style={styles.headerContainer}>
-          <Timer timeLeft={this.state.timeLeft}/>
-          <Text>{this.state.teams[this.state.activeTeam].name}</Text>
-          <Text>{this.state.teams[this.state.activeTeam].points}</Text>
-          <Text>Round: {this.state.round}</Text>
+          <RoundInfo  style={{flex: 1, borderWidth: 2, borderColor: 'blue', alignSelf: 'stretch'}}
+                      teamName={this.state.teams[this.state.activeTeam].name}
+                      teamPoints={this.state.teams[this.state.activeTeam].points}
+                      round={this.state.round}/>
+          <Timer      style={{flex: 4, borderWidth: 2, borderColor: 'red', alignSelf: 'stretch', justifyContent: 'center', alignItems: 'center'}}
+                      timeLeft={this.state.timeLeft}/>
+          <View        style={{flex: 1, borderWidth: 2, borderColor: 'green', alignSelf: 'stretch'}}>
+          </View>
         </View>
         <Text style={styles.cardText}>{this.state.currentCard.value}</Text>
         <Text>{this.state.activeDeck.length}</Text>
@@ -164,7 +174,9 @@ export default class Play extends Component{
           <Button onPress={() => this._countdown()}><Text>Start Countdown</Text></Button>
           <Button onPress={() => this.setState({stopCountdown: true})}><Text>Stop Countdown</Text></Button>
         </View>
+
       </View>
+
 
     )
 
@@ -181,23 +193,40 @@ const styles = StyleSheet.create({
   headerContainer: {
     flex: 1,
     borderWidth: 2,
-    borderColor: 'green',
+    borderColor: 'purple',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    flexDirection: 'row'
   },
   cardText: {
     flex: 4,
     fontSize: 30,
     textAlignVertical: 'center',
-    borderWidth: 2,
-    borderColor: 'black'
+    //borderWidth: 2,
+    //borderColor: 'black'
   },
   btnContainer: {
     flex: 1,
-    borderWidth: 2,
-    borderColor: 'red',
+    //borderWidth: 2,
+    //borderColor: 'red',
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center'
   }
 })
+
+const mapStateToProps = state => {
+  return {
+    round: state.round
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    onNextRound: dispatch(goToNextRound())
+  }
+}
+
+
+
+export default connect(mapStateToProps)(Play)

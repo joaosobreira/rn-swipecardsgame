@@ -6,7 +6,7 @@ import {
 import {Provider} from 'react-redux';
 import {connect} from 'react-redux';
 import AppWithNavigationState from './navigator';
-import {store} from './reducers';
+import {store} from './reducers/rootReducer';
 
 export default class App extends Component {
   render() {

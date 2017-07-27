@@ -5,8 +5,10 @@ import {
   Text
 } from 'react-native';
 
-const Timer = ({timeLeft}) => (
-    <Text>{timeLeft}</Text>
+const Timer = ({style, timeLeft}) => (
+    <View style={style}>
+      <Text style={{fontSize: 30}}>{timeLeft}</Text>
+    </View>
 );
 
 export default Timer;

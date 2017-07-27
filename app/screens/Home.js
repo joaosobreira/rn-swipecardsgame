@@ -37,8 +37,8 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   btnContainer: {
-    borderWidth: 2,
-    borderColor: 'red',
+    //borderWidth: 2,
+    //borderColor: 'red',
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center'
