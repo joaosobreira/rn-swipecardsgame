@@ -124,8 +124,9 @@ class Play extends Component{
       if(currentRound+1>3)
         // End Game
         return;
-      this.setState({round: currentRound+1})
+      //this.setState({round: currentRound+1})
       //onNextRound();
+      this.props.dispatch({type: 'GOTO_NEXT_ROUND'})
       activeDeck = JSON.parse(JSON.stringify(this.state.baseDeck));
       this._shuffle(activeDeck);
       console.log('shuffled deck: ',activeDeck);
@@ -158,7 +159,7 @@ class Play extends Component{
           <RoundInfo  style={{flex: 1, borderWidth: 2, borderColor: 'blue', alignSelf: 'stretch'}}
                       teamName={this.state.teams[this.state.activeTeam].name}
                       teamPoints={this.state.teams[this.state.activeTeam].points}
-                      round={this.state.round}/>
+                      round={this.props.session.round}/>
           <Timer      style={{flex: 4, borderWidth: 2, borderColor: 'red', alignSelf: 'stretch', justifyContent: 'center', alignItems: 'center'}}
                       timeLeft={this.state.timeLeft}/>
           <View        style={{flex: 1, borderWidth: 2, borderColor: 'green', alignSelf: 'stretch'}}>
@@ -216,8 +217,9 @@ const styles = StyleSheet.create({
 })
 
 const mapStateToProps = state => {
+  console.log('state round: ',state)
   return {
-    round: state.round
+    session: state.session
   }
 }
 
