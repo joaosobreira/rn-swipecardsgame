@@ -3,6 +3,8 @@
 // actions
 //export const REPLACE_ACTIVE_DECK = 'REPLACE_ACTIVE_DECK'
 //export const REPLACE_ACTIVE_CARD = 'REPLACE_ACTIVE_CARD'
+import { call, put, takeEvery, select } from 'redux-saga/effects'
+
 export const RESET_DECK = 'RESET_DECK'
 export const SHUFFLE_DECK = 'SHUFFLE_DECK'
 export const SKIP_CARD = 'SKIP_CARD'
@@ -51,9 +53,24 @@ export function chooseDeck(deck){
 
 // sagas
 
+// Workers sagas
+function* guessCardSaga() {
+  const lenght = yield select(getDeckLenght);
+  if(lenght!=0)
+    yield put({type: "USER_FETCH_SUCCEEDED", user: user});
+  else {
+    yield put()
+  }
+}
+
+// Watcher sagas
+function* watchForGuessCard() {
+  yield takeEvery(GUESS_CARD, guessCard);
+}
 
 
 // selectors
+export const getDeckLenght = state => state.deck.activeDeck.length
 
 
 // reducers
