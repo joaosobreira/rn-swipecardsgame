@@ -12,17 +12,9 @@ import Timer from '../components/Timer';
 import RoundInfo from '../components/RoundInfo';
 import {goToNextRound} from '../actions/sessionActions';
 
-const deck = [
-  {value: 'Michael Cera'},
-  {value: 'Emma Stone'},
-  {value: 'Jennifer Lawrence'},
-  {value: 'Anna Kendrick'},
-  {value: 'Amanda Seyfried'},
-  {value: 'James McAvoy'},
-  {value: 'Benedict Cumberbatch'},
-  {value: 'Christian Bale'},
-  {value: 'Brad Pitt'}
-];
+//import {deckMovies} from '../deckSeed';
+
+//const deck = deckMovies
 
 class Play extends Component{
 
@@ -33,12 +25,12 @@ class Play extends Component{
   constructor(props) {
     super(props);
     this.state = {
-      baseDeck: JSON.parse(JSON.stringify(deck)),
-      activeDeck: deck,
+      //baseDeck: JSON.parse(JSON.stringify(deck)),
+      //activeDeck: deck,
       timeLeft: 10,
       //currentCardIndex: 0,
       //activePlayerScore: 0,
-      currentCard: {},
+      //currentCard: {},
       activePlayer: 0,
       teams: [
         {
@@ -64,21 +56,16 @@ class Play extends Component{
   }
 
   componentDidMount() {
-    let {activeDeck} = this.state;
-    this._shuffle(activeDeck);
-    console.log('shuffled deck: ',activeDeck);
-    let newCurrentCard = activeDeck.shift();
-    this.setState({currentCard: newCurrentCard});
-    this.setState({activeDeck: activeDeck});
+    console.log('state deck: ',this.props.deck);
+
+    //this._shuffle(activeDeck);
+    //console.log('shuffled deck: ',activeDeck);
+    //let newCurrentCard = activeDeck.shift();
+    //this.setState({currentCard: newCurrentCard});
+    //this.setState({activeDeck: activeDeck});
     //this._countdown(); // Commented for tests
   }
 
-  _shuffle(initialDeck) {
-      for (let i = initialDeck.length; i; i--) {
-          let j = Math.floor(Math.random() * i);
-          [initialDeck[i - 1], initialDeck[j]] = [initialDeck[j], initialDeck[i - 1]];
-      }
-  }
 
   _countdown(){
     let timer = () => {
@@ -102,18 +89,24 @@ class Play extends Component{
   }
 
   _skipCard = () => {
-    console.log('Clicked Skip!',this.state.currentCardIndex);
-    console.log('Deck Size ',this.state.activeDeck.length);
-    let {activeDeck} = this.state;
-    activeDeck.push(this.state.currentCard);
-    let newCurrentCard = activeDeck.shift();
-    this.setState({currentCard: newCurrentCard});
-    this.setState({activeDeck: activeDeck});
+
+    this.props.dispatch({type: 'SKIP_CARD'});
+
+    //console.log('Clicked Skip!',this.state.currentCardIndex);
+    //console.log('Deck Size ',this.state.activeDeck.length);
+    //let {activeDeck} = this.state;
+    //activeDeck.push(this.state.currentCard);
+    //let newCurrentCard = activeDeck.shift();
+    //this.setState({currentCard: newCurrentCard});
+    //this.setState({activeDeck: activeDeck});
 
   }
 
   _guessCard = () => {
     //console.log('Clicked Guess!',this.state.currentCardIndex);
+
+    this.props.dispatch({type: 'GUESS_CARD'});
+/*
     console.log('Deck Size ',this.state.activeDeck.length);
     let activeDeck;
 
@@ -147,10 +140,13 @@ class Play extends Component{
     teams[this.state.activeTeam].points = currentTeamScore+1
     this.setState({teams: teams});
     //console.log('Active Player Score: ',this.state.activePlayerScore);
+*/
   }
 
 
   render(){
+    console.log('this.props: ',this.props);
+    let {activeDeck, baseDeck, currentCard} = this.props.deck;
 
     return(
       <View style={styles.container}>
@@ -165,8 +161,8 @@ class Play extends Component{
           <View        style={{flex: 1, borderWidth: 2, borderColor: 'green', alignSelf: 'stretch'}}>
           </View>
         </View>
-        <Text style={styles.cardText}>{this.state.currentCard.value}</Text>
-        <Text>{this.state.activeDeck.length}</Text>
+        <Text style={styles.cardText}>{currentCard.value}</Text>
+        <Text>{activeDeck.length}</Text>
         <View style={styles.btnContainer}>
           <Button onPress={() => this._guessCard()}><Text>Guess</Text></Button>
           <Button onPress={() => this._skipCard()}><Text>Skip</Text></Button>
@@ -219,7 +215,8 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => {
   console.log('state round: ',state)
   return {
-    session: state.session
+    session: state.session,
+    deck: state.deck
   }
 }
 

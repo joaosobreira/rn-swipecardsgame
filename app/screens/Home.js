@@ -19,7 +19,7 @@ export default class Home extends Component{
     return(
       <View style={styles.container}>
         <View style={styles.btnContainer}>
-          <Button onPress={() => navigate('Play')}><Text>Start Game</Text></Button>
+          <Button onPress={() => navigate('PreGame')}><Text>Start Game</Text></Button>
         </View>
       </View>
 
