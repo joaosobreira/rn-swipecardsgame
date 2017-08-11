@@ -16,9 +16,13 @@
     "babel-jest": "20.0.3",
     "babel-preset-react-native": "2.0.0",
     "jest": "20.0.4",
+    "react-native-debugger-open": "^0.3.12",
     "react-test-renderer": "16.0.0-alpha.12"
   },
   "jest": {
     "preset": "react-native"
+  },
+  "scripts": {
+    "postinstall": "rndebugger-open"
   }
 }

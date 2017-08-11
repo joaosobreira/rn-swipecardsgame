@@ -4,11 +4,13 @@ import React, {Component} from 'react';
 import Play from './screens/Play.js';
 import Home from './screens/Home.js';
 import PreGame from './screens/PreGame.js';
+import Scoreboard from './screens/Scoreboard.js'
 
 const AppRouteConfigs = {
   Home: {screen: Home},
   PreGame: {screen: PreGame},
-  Play: {screen: Play}
+  Play: {screen: Play},
+  Scoreboard: {screen: Scoreboard}
 }
 
 const AppNavigator = StackNavigator(AppRouteConfigs)

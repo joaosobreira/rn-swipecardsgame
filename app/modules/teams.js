@@ -1,3 +1,6 @@
+import {GUESS_CARD} from './deck';
+import {GOTO_NEXT_ROUND} from './session'
+
 //teams.js
 
 // actions
@@ -60,15 +63,43 @@ export function addPointToActiveTeam(){
 
 
 // selectors
+export const getPointsByTeam = (state, team) => state.teams[team].points
 
 
 // reducers
 const initialState = {
-
+  activePlayer: 0,
+  activeTeam: 0,
+  teams: [
+    {
+      name: 'Team A',
+      points: 0
+    },
+    {
+      name: 'Team B',
+      points: 0
+    }
+  ]
 }
 
 export default function reducer (state = initialState, action) {
   switch (action.type) {
+      case GUESS_CARD:
+        return {
+          ...state,
+          //teams[activeTeam].points = state.teams[activeTeam].points+1
+          teams: state.teams.map(
+            (team, i) => i === state.activeTeam ?
+            { ...team, points: state.teams[i].points+1 } :
+            team
+          )
+        }
+      case GO_TO_NEXT_TEAM:
+      case GOTO_NEXT_ROUND:
+        return {
+          ...state,
+          activeTeam: state.activeTeam==0 ? 1 : 0
+        }
       default:
         return state;
   }

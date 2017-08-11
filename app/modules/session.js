@@ -7,9 +7,10 @@ export const GOTO_NEXT_ROUND = 'GOTO_NEXT_ROUND'
 export const SWITCH_TIMER_STATUS = 'SWITCH_TIMER_STATUS'
 export const START_TIMER = 'START_TIMER'
 export const STOP_TIMER = 'STOP_TIMER'
+export const END_ROUND = 'END_ROUND'
 
-const STOPPED = 'STOPPED'
-const RUNNING = 'RUNNING'
+const ON = 'ON'
+const OFF = 'OFF'
 
 // action Creators
 export function goToNextRound(){
@@ -42,12 +43,15 @@ export function stopTimer(){
 
 
 // selectors
+export const getTimeLeft = (state) => state.session.timeLeft
+export const getTimerStatus = (state) => state.session.timerStatus
+export const getRound = (state) => state.session.round
 
 
 // reducers
 const initialState = {
   timeLeft: 10,
-  timerStatus: STOPPED,
+  timerStatus: OFF,
   round: 1
 }
 
@@ -61,12 +65,12 @@ export default function reducer (state = initialState, action) {
     case START_TIMER:
       return {
         ...state,
-        timerStatus: RUNNING
+        timerStatus: ON
       };
       case STOP_TIMER:
         return {
           ...state,
-          timerStatus: STOPPED
+          timerStatus: OFF
         };
       default:
         return state;

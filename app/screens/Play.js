@@ -5,12 +5,14 @@ import {
   Text,
   TouchableHighlight
 } from 'react-native';
-import {Button} from 'native-base';
+import {Button, DeckSwiper, Card, CardItem} from 'native-base';
 import {connect} from 'react-redux';
 
 import Timer from '../components/Timer';
 import RoundInfo from '../components/RoundInfo';
 import {goToNextRound} from '../actions/sessionActions';
+import {goToNextTeam} from '../modules/teams'
+import {guessCardSaga, getDeckLenght} from '../modules/deck'
 
 //import {deckMovies} from '../deckSeed';
 
@@ -25,38 +27,14 @@ class Play extends Component{
   constructor(props) {
     super(props);
     this.state = {
-      //baseDeck: JSON.parse(JSON.stringify(deck)),
-      //activeDeck: deck,
       timeLeft: 10,
-      //currentCardIndex: 0,
-      //activePlayerScore: 0,
-      //currentCard: {},
       activePlayer: 0,
-      teams: [
-        {
-          name: 'Team A',
-          points: 0,
-          players: [
-            {name: 'Player 1A'},
-            {name: 'Player 2A'}
-          ]
-        },{
-          name: 'Team B',
-          points: 0,
-          players: [
-            {name: 'Player 1B'},
-            {name: 'Player 2B'}
-          ]
-        }
-      ],
-      activeTeam: 0,
       stopCountdown: false, // just for tests
-      round: 1
     }
   }
 
   componentDidMount() {
-    console.log('state deck: ',this.props.deck);
+    //console.log('state deck: ',this.props.deck);
 
     //this._shuffle(activeDeck);
     //console.log('shuffled deck: ',activeDeck);
@@ -77,7 +55,7 @@ class Play extends Component{
         setTimeout(timer, 1000);
       } else {
         this.setState({timeLeft: 10});
-        this.setState({activeTeam: this.state.activeTeam==0 ? 1 : 0})
+        this.props.dispatch(goToNextTeam());
         setTimeout(timer, 1000);
         //Teste - aqui seria o callback para o final da ronda
         this._skipCard();
@@ -89,23 +67,15 @@ class Play extends Component{
   }
 
   _skipCard = () => {
-
     this.props.dispatch({type: 'SKIP_CARD'});
-
-    //console.log('Clicked Skip!',this.state.currentCardIndex);
-    //console.log('Deck Size ',this.state.activeDeck.length);
-    //let {activeDeck} = this.state;
-    //activeDeck.push(this.state.currentCard);
-    //let newCurrentCard = activeDeck.shift();
-    //this.setState({currentCard: newCurrentCard});
-    //this.setState({activeDeck: activeDeck});
-
   }
 
   _guessCard = () => {
-    //console.log('Clicked Guess!',this.state.currentCardIndex);
+    if(this.props.deckSize==1){
+      this.props.navigation.navigate('Scoreboard')
+    }
+    this.props.dispatch({type: 'GUESS_CARD_ASYNC'});
 
-    this.props.dispatch({type: 'GUESS_CARD'});
 /*
     console.log('Deck Size ',this.state.activeDeck.length);
     let activeDeck;
@@ -153,16 +123,22 @@ class Play extends Component{
 
         <View style={styles.headerContainer}>
           <RoundInfo  style={{flex: 1, borderWidth: 2, borderColor: 'blue', alignSelf: 'stretch'}}
-                      teamName={this.state.teams[this.state.activeTeam].name}
-                      teamPoints={this.state.teams[this.state.activeTeam].points}
+                      teamName={this.props.teams.teams[this.props.teams.activeTeam].name}
+                      teamPoints={this.props.teams.teams[this.props.teams.activeTeam].points}
                       round={this.props.session.round}/>
           <Timer      style={{flex: 4, borderWidth: 2, borderColor: 'red', alignSelf: 'stretch', justifyContent: 'center', alignItems: 'center'}}
                       timeLeft={this.state.timeLeft}/>
           <View        style={{flex: 1, borderWidth: 2, borderColor: 'green', alignSelf: 'stretch'}}>
           </View>
         </View>
-        <Text style={styles.cardText}>{currentCard.value}</Text>
-        <Text>{activeDeck.length}</Text>
+
+
+        <View style={styles.deckContainer}>
+          <Text style={styles.cardText}>{currentCard.value}</Text>
+        </View>
+
+
+        <Text>{this.props.deckSize}</Text>
         <View style={styles.btnContainer}>
           <Button onPress={() => this._guessCard()}><Text>Guess</Text></Button>
           <Button onPress={() => this._skipCard()}><Text>Skip</Text></Button>
@@ -195,10 +171,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     flexDirection: 'row'
   },
-  cardText: {
+  deckContainer: {
     flex: 4,
-    fontSize: 30,
-    textAlignVertical: 'center',
+    justifyContent: 'center'
+  },
+  cardText: {
+    fontSize: 30
     //borderWidth: 2,
     //borderColor: 'black'
   },
@@ -213,18 +191,21 @@ const styles = StyleSheet.create({
 })
 
 const mapStateToProps = state => {
-  console.log('state round: ',state)
+  //console.log('state round: ',state)
   return {
     session: state.session,
-    deck: state.deck
+    deck: state.deck,
+    teams: state.teams,
+    deckSize: getDeckLenght(state)
   }
 }
-
+/*
 const mapDispatchToProps = dispatch => {
   return {
     onNextRound: dispatch(goToNextRound())
   }
 }
+*/
 
 
 
