@@ -7,10 +7,21 @@ import {
 import {Button} from 'native-base';
 import {connect} from 'react-redux'
 
+import {getActiveTeamName} from '../modules/teams'
+import {goToNextTeam} from '../modules/teams'
+
 class GetReady extends Component{
 
   static navigationOptions = {
     header: null
+  }
+
+  componentWillMount() {
+    this.props.dispatch(goToNextTeam());
+  }
+
+  componentWillUnmount(){
+    this.props.dispatch({type: 'SKIP_CARD'});
   }
 
   render(){
@@ -19,10 +30,13 @@ class GetReady extends Component{
 
     return(
       <View style={styles.container}>
-        <Text>
-          {this.props.activeTeamName}
+        <Text style={{fontSize: 20}}>
+          Get ready
         </Text>
-        <View style={styles.btnContainer}>
+        <Text style={{fontWeight: 'bold', fontSize: 30}}>
+          {this.props.teams.teams[this.props.teams.activeTeam].name}
+        </Text>
+        <View style={styles.btnContainer, {marginTop: 20}}>
           <Button onPress={() => navigate('Play')}><Text>Continue</Text></Button>
         </View>
 
@@ -53,8 +67,7 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => {
   //console.log('state round: ',state)
   return {
-    teams: state.teams,
-    activeTeamName: getActiveTeamName(state)
+    teams: state.teams
   }
 }
 

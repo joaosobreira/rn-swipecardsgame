@@ -45,12 +45,11 @@ class Play extends Component{
       var time = this.state.timeLeft - 1;
       this.setState({timeLeft: time});
       if (time > 0) {
-        console.log('oi')
         setTimeout(timer, 1000);
       } else {
         this.props.navigation.navigate('GetReady')
         //this.setState({timeLeft: 10});
-        //this.props.dispatch(goToNextTeam());
+        //
         //setTimeout(timer, 1000);
         //Teste - aqui seria o callback para o final da ronda
         //this._skipCard();
