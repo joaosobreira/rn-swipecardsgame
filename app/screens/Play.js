@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 import {Button, DeckSwiper, Card, CardItem} from 'native-base';
 import {connect} from 'react-redux';
+import { Icon } from 'react-native-elements'
 
 import Timer from '../components/Timer';
 import RoundInfo from '../components/RoundInfo';
@@ -28,41 +29,35 @@ class Play extends Component{
     super(props);
     this.state = {
       timeLeft: 10,
-      activePlayer: 0,
-      stopCountdown: false, // just for tests
+      timerStatus: true // just for tests
     }
   }
 
   componentDidMount() {
-    //console.log('state deck: ',this.props.deck);
-
-    //this._shuffle(activeDeck);
-    //console.log('shuffled deck: ',activeDeck);
-    //let newCurrentCard = activeDeck.shift();
-    //this.setState({currentCard: newCurrentCard});
-    //this.setState({activeDeck: activeDeck});
-    //this._countdown(); // Commented for tests
+    this._countdown();
   }
 
 
   _countdown(){
     let timer = () => {
-      if(this.state.stopCountdown)
+      if(this.state.timerStatus)
         return;
       var time = this.state.timeLeft - 1;
       this.setState({timeLeft: time});
       if (time > 0) {
+        console.log('oi')
         setTimeout(timer, 1000);
       } else {
-        this.setState({timeLeft: 10});
-        this.props.dispatch(goToNextTeam());
-        setTimeout(timer, 1000);
+        this.props.navigation.navigate('GetReady')
+        //this.setState({timeLeft: 10});
+        //this.props.dispatch(goToNextTeam());
+        //setTimeout(timer, 1000);
         //Teste - aqui seria o callback para o final da ronda
-        this._skipCard();
+        //this._skipCard();
       }
     };
-    if(this.state.stopCountdown)
-      this.setState({stopCountdown: false})
+    if(this.state.timerStatus)
+      this.setState({timerStatus: false})
     setTimeout(timer, 1000);
   }
 
@@ -75,48 +70,19 @@ class Play extends Component{
       this.props.navigation.navigate('Scoreboard')
     }
     this.props.dispatch({type: 'GUESS_CARD_ASYNC'});
-
-/*
-    console.log('Deck Size ',this.state.activeDeck.length);
-    let activeDeck;
-
-    if(this.state.activeDeck.length == 0){
-      // End of Round
-      let currentRound = this.state.round;
-      // If it is the end of the last round
-      if(currentRound+1>3)
-        // End Game
-        return;
-      //this.setState({round: currentRound+1})
-      //onNextRound();
-      this.props.dispatch({type: 'GOTO_NEXT_ROUND'})
-      activeDeck = JSON.parse(JSON.stringify(this.state.baseDeck));
-      this._shuffle(activeDeck);
-      console.log('shuffled deck: ',activeDeck);
-
-    } else {
-      activeDeck = this.state.activeDeck;
-      console.log('activeDeck: ',activeDeck);
-    }
-    console.log('activeDeck2: ',activeDeck);
-    let newCurrentCard = activeDeck.shift();
-    this.setState({currentCard: newCurrentCard});
-    this.setState({activeDeck: activeDeck});
-    console.log('activeDeck: ',this.state.activeDeck);
-    console.log('baseDeck: ',this.state.baseDeck);
-
-    let {teams} = this.state;
-    let currentTeamScore = this.state.teams[this.state.activeTeam].points;
-    teams[this.state.activeTeam].points = currentTeamScore+1
-    this.setState({teams: teams});
-    //console.log('Active Player Score: ',this.state.activePlayerScore);
-*/
   }
 
 
   render(){
     console.log('this.props: ',this.props);
     let {activeDeck, baseDeck, currentCard} = this.props.deck;
+    let timerIcon;
+
+    if(this.state.timerStatus){
+      timerIcon = <Icon name="play" type="font-awesome" onPress={() => this._countdown()}/>
+    } else {
+      timerIcon = <Icon name="pause" type="font-awesome" onPress={() => this.setState({timerStatus: true})}/>
+    }
 
     return(
       <View style={styles.container}>
@@ -128,7 +94,8 @@ class Play extends Component{
                       round={this.props.session.round}/>
           <Timer      style={{flex: 4, borderWidth: 2, borderColor: 'red', alignSelf: 'stretch', justifyContent: 'center', alignItems: 'center'}}
                       timeLeft={this.state.timeLeft}/>
-          <View        style={{flex: 1, borderWidth: 2, borderColor: 'green', alignSelf: 'stretch'}}>
+          <View        style={{flex: 1, borderWidth: 2, borderColor: 'green', alignSelf: 'stretch', alignItems: 'center', justifyContent: 'center'}}>
+            {timerIcon}
           </View>
         </View>
 
@@ -140,12 +107,27 @@ class Play extends Component{
 
         <Text>{this.props.deckSize}</Text>
         <View style={styles.btnContainer}>
-          <Button onPress={() => this._guessCard()}><Text>Guess</Text></Button>
-          <Button onPress={() => this._skipCard()}><Text>Skip</Text></Button>
+          <Icon
+            name="md-checkmark-circle"
+            type="ionicon"
+            color="green"
+            size={60}
+            iconStyle={{margin: 10}}
+            onPress={() => this._guessCard()}
+            raised={true}
+          />
+          <Icon
+            name="md-close-circle"
+            type="ionicon"
+            color="red"
+            size={60}
+            iconStyle={{margin: 10}}
+            onPress={() => this._skipCard()}
+            raised={true}
+          />
         </View>
         <View style={styles.btnContainer}>
-          <Button onPress={() => this._countdown()}><Text>Start Countdown</Text></Button>
-          <Button onPress={() => this.setState({stopCountdown: true})}><Text>Stop Countdown</Text></Button>
+
         </View>
 
       </View>

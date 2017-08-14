@@ -64,6 +64,7 @@ export function addPointToActiveTeam(){
 
 // selectors
 export const getPointsByTeam = (state, team) => state.teams[team].points
+export const getActiveTeamName = (state) => state.teams[state.activeTeam].name
 
 
 // reducers

@@ -5,8 +5,9 @@ import {
   Text
 } from 'react-native';
 import {Button} from 'native-base';
+import {connect} from 'react-redux'
 
-export default class GetReady extends Component{
+class GetReady extends Component{
 
   static navigationOptions = {
     header: null
@@ -18,6 +19,12 @@ export default class GetReady extends Component{
 
     return(
       <View style={styles.container}>
+        <Text>
+          {this.props.activeTeamName}
+        </Text>
+        <View style={styles.btnContainer}>
+          <Button onPress={() => navigate('Play')}><Text>Continue</Text></Button>
+        </View>
 
       </View>
 
@@ -42,3 +49,15 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   }
 })
+
+const mapStateToProps = state => {
+  //console.log('state round: ',state)
+  return {
+    teams: state.teams,
+    activeTeamName: getActiveTeamName(state)
+  }
+}
+
+
+
+export default connect(mapStateToProps)(GetReady)
