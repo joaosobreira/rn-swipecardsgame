@@ -4,10 +4,12 @@ import {
   StyleSheet,
   Text,
   TouchableHighlight,
-  ScrollView
+  ScrollView,
+  Dimensions
 } from 'react-native';
 import {Button} from 'native-base';
 import {connect} from 'react-redux';
+
 
 import {chooseDeck} from '../modules/deck';
 import {deckActors, deckMovies, deckTVShows} from '../deckSeed';
@@ -23,6 +25,8 @@ class PreGame extends Component{
   render(){
 
     const { navigate } = this.props.navigation;
+    let screenwidth = Dimensions.get('window').width;
+
 
     return(
 /*
@@ -56,7 +60,7 @@ class PreGame extends Component{
       </ScrollView>
     </View>
     <View style={styles.btnContainer}>
-      <Button onPress={() => navigate('Play')}><Text>Play</Text></Button>
+      <Button block style={{position: 'absolute', bottom: 0, width: screenwidth}} onPress={() => navigate('Play')}><Text>Play</Text></Button>
     </View>
   </View>
 )

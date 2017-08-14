@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Component} from 'react';
 import {
   View,
   StyleSheet,
@@ -7,17 +7,29 @@ import {
   Dimensions
 } from 'react-native';
 
-const DeckAvatar = ({deckName, selected, backgroundImage, onSelectHandler}) => {
-  let windowWidth = Dimensions.get('window').width
-  let avatarWidth = (windowWidth/2)-20
+export default class DeckAvatar extends Component  {
 
-  return (
-    <TouchableHighlight onPress={onSelectHandler}>
-      <View style={[styles.avatar, {width: avatarWidth, height: avatarWidth}]}>
-        <Text style={{fontWeight: 'bold'}}>{deckName}</Text>
-      </View>
-    </TouchableHighlight>
-  )
+//  ({deckName, selected, backgroundImage, onSelectHandler}) => {
+
+    constructor(props) {
+      super(props);
+      this.state = {
+        selected: false
+      }
+    }
+
+    render(){
+      let {deckName, selected, backgroundImage, onSelectHandler} = this.props
+      let windowWidth = Dimensions.get('window').width
+      let avatarWidth = (windowWidth/2)-20
+      return (
+        <TouchableHighlight onPress={() => {onSelectHandler(); this.setState({selected: true})}}>
+          <View style={[styles.avatar, {width: avatarWidth, height: avatarWidth}, this.state.selected ? {backgroundColor: 'red'} : {}]}>
+            <Text style={{fontWeight: 'bold'}}>{deckName}</Text>
+          </View>
+        </TouchableHighlight>
+      )
+    }
 }
 
 const styles = StyleSheet.create({
@@ -32,5 +44,3 @@ const styles = StyleSheet.create({
     margin: 10
   }
 })
-
-export default DeckAvatar;
