@@ -64,7 +64,8 @@ class Play extends Component{
   }
 
   _skipCard = () => {
-    this.props.dispatch({type: 'SKIP_CARD'});
+    if(this.props.session.round!=1)
+      this.props.dispatch({type: 'SKIP_CARD'});
   }
 
   _guessCard = () => {
