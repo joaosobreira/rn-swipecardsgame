@@ -11,6 +11,7 @@ export const SKIP_CARD = 'SKIP_CARD'
 export const GUESS_CARD = 'GUESS_CARD'
 export const GUESS_CARD_ASYNC = 'GUESS_CARD_ASYNC'
 export const CHOOSE_DECK = 'CHOOSE_DECK'
+export const SELECT_CARDS_ROUND = 'SELECT_CARDS_ROUND'
 
 // utils
 function _shuffle(initialDeck) {
@@ -50,6 +51,11 @@ export function chooseDeck(deck){
   }
 }
 
+export function selectNumberOfCardPerRound(numberOfCardPerRound){
+  return { type: SELECT_CARDS_ROUND,
+      payload: numberOfCardPerRound
+    }
+}
 
 
 // sagas
@@ -86,16 +92,21 @@ const initialState = {
   baseDeck: [],
   activeDeck: [],
   currentCard: {},
-  numberOfCard: 20
+  numberOfCards: 20
 }
 
 export default function reducer (state = initialState, action) {
   switch (action.type) {
+      case SELECT_CARDS_ROUND:
+        return {
+          ...state,
+            numberOfCards: action.payload
+        };
       case CHOOSE_DECK:
         return {
           ...state,
           baseDeck: action.payload,
-          activeDeck: action.payload.slice(1,state.numberOfCard),
+          activeDeck: action.payload.slice(1,state.numberOfCards),
           currentCard: action.payload.slice(0,1)[0]
         };
       case GUESS_CARD:
