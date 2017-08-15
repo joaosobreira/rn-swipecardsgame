@@ -41,8 +41,13 @@ export function shuffleDeck(newActiveCard){
 }
 
 export function chooseDeck(deck){
-  return {type: CHOOSE_DECK,
-  payload: deck}
+  console.log('Shuffling...')
+  let shuffledDeck = _shuffle(deck);
+  console.log('Shuffled! New Deck: ',shuffledDeck)
+  return {
+    type: CHOOSE_DECK,
+    payload: shuffledDeck
+  }
 }
 
 
@@ -80,7 +85,8 @@ export const getBaseDeck = state => state.deck.baseDeck
 const initialState = {
   baseDeck: [],
   activeDeck: [],
-  currentCard: {}
+  currentCard: {},
+  numberOfCard: 20
 }
 
 export default function reducer (state = initialState, action) {
@@ -89,7 +95,7 @@ export default function reducer (state = initialState, action) {
         return {
           ...state,
           baseDeck: action.payload,
-          activeDeck: action.payload.slice(1,action.payload.length),
+          activeDeck: action.payload.slice(1,state.numberOfCard),
           currentCard: action.payload.slice(0,1)[0]
         };
       case GUESS_CARD:

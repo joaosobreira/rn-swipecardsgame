@@ -12,7 +12,7 @@ import {connect} from 'react-redux';
 
 
 import {chooseDeck} from '../modules/deck';
-import {deckActors, deckMovies, deckTVShows} from '../deckSeed';
+import {deckActors, deckMovies, deckTVShows, deckMusic} from '../deckSeed';
 
 import DeckAvatar from '../components/DeckAvatar';
 
@@ -52,7 +52,7 @@ class PreGame extends Component{
         </View>
         <View style={styles.avatarRowContainer}>
           <DeckAvatar deckName='Movies' onSelectHandler={() => this.props.dispatch(chooseDeck(deckMovies))} />
-          <DeckAvatar deckName='Dummy' />
+          <DeckAvatar deckName='Music' onSelectHandler={() => this.props.dispatch(chooseDeck(deckMusic))}/>
           <DeckAvatar deckName='Dummy' />
           <DeckAvatar deckName='Dummy' />
           <DeckAvatar deckName='Dummy' />
