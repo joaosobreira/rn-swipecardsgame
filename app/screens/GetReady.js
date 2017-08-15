@@ -17,10 +17,12 @@ class GetReady extends Component{
   }
 
   componentWillMount() {
+    console.log('before go to next team: ',this.props.teams.activeTeam)
     this.props.dispatch(goToNextTeam());
+    console.log('after go to next team: ',this.props.teams.activeTeam)
   }
 
-  componentWillUnmount(){
+  componentDidMount(){
     this.props.dispatch({type: 'SKIP_CARD'});
   }
 

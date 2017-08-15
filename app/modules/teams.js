@@ -96,7 +96,6 @@ export default function reducer (state = initialState, action) {
           )
         }
       case GO_TO_NEXT_TEAM:
-      case GOTO_NEXT_ROUND:
         return {
           ...state,
           activeTeam: state.activeTeam==0 ? 1 : 0

@@ -29,7 +29,8 @@ class Play extends Component{
     super(props);
     this.state = {
       timeLeft: 10,
-      timerStatus: true // just for tests
+      timerStatus: true, // just for tests
+      timerId: undefined
     }
   }
 
@@ -45,7 +46,8 @@ class Play extends Component{
       var time = this.state.timeLeft - 1;
       this.setState({timeLeft: time});
       if (time > 0) {
-        setTimeout(timer, 1000);
+        let timerId = setTimeout(timer, 1000);
+        this.setState({timerId: timerId})
       } else {
         this.props.navigation.navigate('GetReady')
         //this.setState({timeLeft: 10});
@@ -57,7 +59,8 @@ class Play extends Component{
     };
     if(this.state.timerStatus)
       this.setState({timerStatus: false})
-    setTimeout(timer, 1000);
+    let timerId = setTimeout(timer, 1000);
+    this.setState({timerId: timerId});
   }
 
   _skipCard = () => {
@@ -66,6 +69,7 @@ class Play extends Component{
 
   _guessCard = () => {
     if(this.props.deckSize==1){
+      clearTimeout(this.state.timerId);
       this.props.navigation.navigate('Scoreboard')
     }
     this.props.dispatch({type: 'GUESS_CARD_ASYNC'});

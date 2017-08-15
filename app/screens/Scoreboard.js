@@ -6,17 +6,12 @@ import {
   ListView
 } from 'react-native';
 import {connect} from 'react-redux'
-import {Button} from 'native-base';
+import {Button, Container, Content, List, ListItem} from 'native-base';
 
 class Scoreboard extends Component{
 
   constructor(props){
     super(props);
-    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-    this.state = {
-      dataSource: ds.cloneWithRows(this.props.teams.teams)
-    };
-    console.log('dataSource: ',this.state.dataSource)
   }
 
   static navigationOptions = {
@@ -30,14 +25,27 @@ class Scoreboard extends Component{
 
     return(
       <View style={styles.container}>
+        <Text style={{marginTop: 20, fontSize: 30}}>Scoreboard</Text>
         <View style={styles.listContainer}>
-          <ListView
-            dataSource={this.state.dataSource}
-            renderRow={(data) => <View><Text>{data.name} - {data.points}</Text></View>}
-      />
+
+          <Container>
+              <Content>
+                <List dataArray={this.props.teams.teams}
+                    renderRow={(data) =>
+                        <ListItem>
+                            <View style={{flexDirection: 'column', alignItems: 'center'}}>
+                              <Text style={{fontWeight: 'bold', fontSize: 20}}>{data.name}</Text>
+                              <Text>{data.points}</Text>
+                            </View>
+                        </ListItem>
+                    }>
+                </List>
+              </Content>
+          </Container>
         </View>
+
         <View style={styles.btnContainer}>
-          <Button onPress={() => navigate('Play')}><Text>Continue</Text></Button>
+          <Button onPress={() => navigate('GetReady')}><Text>Continue</Text></Button>
         </View>
       </View>
 
