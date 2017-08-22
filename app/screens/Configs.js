@@ -10,6 +10,7 @@ import {connect} from 'react-redux'
 
 import {setNumberOfTeams} from '../modules/teams'
 import {selectNumberOfCardPerRound} from '../modules/deck'
+import {setSessionTimePerPlayer} from '../modules/session'
 
 class Configs extends Component{
 
@@ -22,7 +23,7 @@ class Configs extends Component{
     this.state = {
       selectedItem1: 2,
       selectedItem2: 20,
-      selectedItem3: 10
+      selectedItem3: 30
     }
   }
 
@@ -34,10 +35,15 @@ class Configs extends Component{
     this.setState({selectedItem2: value})
   }
 
+  _onValue3Change(value){
+    this.setState({selectedItem3: value})
+  }
+
   _onSaveButton(){
     console.log('running save button: ',this.props)
     this.props.dispatch(setNumberOfTeams(this.state.selectedItem1))
     this.props.dispatch(selectNumberOfCardPerRound(this.state.selectedItem2))
+    this.props.dispatch(setSessionTimePerPlayer(this.state.selectedItem3))
     this.props.navigation.navigate('Home')
   }
 
@@ -80,7 +86,7 @@ class Configs extends Component{
                 iosHeader="Select one"
                 mode="dropdown"
                 selectedValue={this.state.selectedItem3}
-                onValueChange={this._onValue1Change.bind(this)}>
+                onValueChange={this._onValue3Change.bind(this)}>
                 <Picker.Item label="10" value={10} />
                 <Picker.Item label="30" value={30} />
                 <Picker.Item label="60" value={60} />

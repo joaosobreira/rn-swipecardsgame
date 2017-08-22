@@ -28,7 +28,7 @@ class Play extends Component{
   constructor(props) {
     super(props);
     this.state = {
-      timeLeft: 10,
+      timeLeft: this.props.session.timePerPlayer,
       timerStatus: true, // just for tests
       timerId: undefined
     }

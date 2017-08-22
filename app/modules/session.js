@@ -8,6 +8,7 @@ export const SWITCH_TIMER_STATUS = 'SWITCH_TIMER_STATUS'
 export const START_TIMER = 'START_TIMER'
 export const STOP_TIMER = 'STOP_TIMER'
 export const END_ROUND = 'END_ROUND'
+export const SET_SESSION_TIME_PER_PLAYER = 'SET_SESSION_TIME_PER_PLAYER'
 
 const ON = 'ON'
 const OFF = 'OFF'
@@ -37,6 +38,13 @@ export function stopTimer(){
   return {type: STOP_TIMER}
 }
 
+export function setSessionTimePerPlayer(timePerPlayer){
+  return {
+    type: SET_SESSION_TIME_PER_PLAYER,
+    payload: timePerPlayer
+  }
+}
+
 
 // sagas
 
@@ -50,7 +58,7 @@ export const getRound = (state) => state.session.round
 
 // reducers
 const initialState = {
-  timeLeft: 10,
+  timePerPlayer: 30,
   timerStatus: OFF,
   round: 1
 }
@@ -67,12 +75,17 @@ export default function reducer (state = initialState, action) {
         ...state,
         timerStatus: ON
       };
-      case STOP_TIMER:
-        return {
-          ...state,
-          timerStatus: OFF
-        };
-      default:
-        return state;
+    case STOP_TIMER:
+      return {
+        ...state,
+        timerStatus: OFF
+      };
+    case SET_SESSION_TIME_PER_PLAYER:
+      return {
+        ...state,
+        timePerPlayer: action.payload
+      };
+    default:
+      return state;
   }
 }
