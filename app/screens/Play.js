@@ -1,23 +1,40 @@
 import React, {Component} from 'react';
 import {
+  Text,
   View,
   StyleSheet,
-  Text,
-  TouchableHighlight
+  TouchableHighlight,
+  Dimensions
 } from 'react-native';
-import {Button, DeckSwiper, Card, CardItem} from 'native-base';
+import { Button } from 'native-base';
+
 import {connect} from 'react-redux';
 import { Icon } from 'react-native-elements'
 
 import Timer from '../components/Timer';
 import RoundInfo from '../components/RoundInfo';
-import {goToNextRound} from '../actions/sessionActions';
+import DeckSwiper from '../components/DeckSwiper'
+
+//import {goToNextRound} from '../actions/sessionActions';
 import {goToNextTeam} from '../modules/teams'
 import {guessCardSaga, getDeckLenght} from '../modules/deck'
+import {CARDS_MODE_TEXT, CARDS_MODE_SWIPE} from '../modules/session'
 
-//import {deckMovies} from '../deckSeed';
+const cards = [
+  {
+    text: 'Card One',
+    name: 'One'
+  },
+  {
+    text: 'Card Two',
+    name: 'Two'
+  },
+  {
+    text: 'Card Three',
+    name: 'Three'
+  }
+];
 
-//const deck = deckMovies
 
 class Play extends Component{
 
@@ -81,6 +98,20 @@ class Play extends Component{
     console.log('this.props: ',this.props);
     let {activeDeck, baseDeck, currentCard} = this.props.deck;
     let timerIcon;
+    let deckComponent;
+
+    let screenWidth = Dimensions.get('window').width
+
+    switch(this.props.session.cardsMode){
+      case CARDS_MODE_TEXT:
+        deckComponent = <Text style={styles.cardText}>{currentCard.value}</Text>
+        break;
+      case CARDS_MODE_SWIPE:
+        deckComponent = <DeckSwiper cards={cards} />
+        break;
+      default:
+        deckComponent = <Text style={styles.cardText}>{currentCard.value}</Text>
+    }
 
     if(this.state.timerStatus){
       timerIcon = <Icon name="play" type="font-awesome" onPress={() => this._countdown()}/>
@@ -89,7 +120,7 @@ class Play extends Component{
     }
 
     return(
-      <View style={styles.container}>
+      <View style={[styles.container,{width: screenWidth}]}>
 
         <View style={styles.headerContainer}>
           <RoundInfo  style={{flex: 1, borderWidth: 2, borderColor: 'blue', alignSelf: 'stretch'}}
@@ -105,7 +136,7 @@ class Play extends Component{
 
 
         <View style={styles.deckContainer}>
-          <Text style={styles.cardText}>{currentCard.value}</Text>
+          {deckComponent}
         </View>
 
 
@@ -159,7 +190,11 @@ const styles = StyleSheet.create({
   },
   deckContainer: {
     flex: 4,
-    justifyContent: 'center'
+    justifyContent: 'center',
+    borderWidth: 2,
+    borderColor: 'purple',
+    width: 300
+
   },
   cardText: {
     fontSize: 30

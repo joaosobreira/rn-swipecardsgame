@@ -10,6 +10,9 @@ export const STOP_TIMER = 'STOP_TIMER'
 export const END_ROUND = 'END_ROUND'
 export const SET_SESSION_TIME_PER_PLAYER = 'SET_SESSION_TIME_PER_PLAYER'
 
+export const CARDS_MODE_TEXT = 'CARDS_MODE_TEXT'
+export const CARDS_MODE_SWIPE = 'CARDS_MODE_SWIPE'
+
 const ON = 'ON'
 const OFF = 'OFF'
 
@@ -60,7 +63,8 @@ export const getRound = (state) => state.session.round
 const initialState = {
   timePerPlayer: 30,
   timerStatus: OFF,
-  round: 1
+  round: 1,
+  cardsMode: CARDS_MODE_SWIPE
 }
 
 export default function reducer (state = initialState, action) {
